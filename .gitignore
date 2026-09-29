@@ -6,3 +6,4 @@ data-min-findings.json
 node_modules/
 package-lock.json
 capture.json
+TODO.md
