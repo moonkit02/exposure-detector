@@ -1,0 +1,24 @@
+{
+  "name": "exposure-detector",
+  "version": "1.0.0",
+  "description": "A standalone scanner for data-minimization flaws in web APIs. It finds two things:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://moonkit02@github.com/moonkit02/exposure-detector.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/moonkit02/exposure-detector/issues"
+  },
+  "homepage": "https://github.com/moonkit02/exposure-detector#readme",
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}
