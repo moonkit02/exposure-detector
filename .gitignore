@@ -2,8 +2,5 @@ __pycache__/
 *.pyc
 *.har
 *-findings.json
-data-min-findings.json
-node_modules/
-package-lock.json
 capture.json
 TODO.md
