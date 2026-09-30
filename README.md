@@ -21,16 +21,29 @@ Chrome is used via Playwright's `channel="chrome"`.
 ## Usage
 
 ```sh
-python3 exposure-detect.py TARGET_URL [--routes '#/a,#/b'] [--out FILE] [--settle MS]
+python3 exposure-detect.py TARGET_URL [--crawl | --routes '#/a,#/b'] [--max-pages N] [--out FILE] [--settle MS]
 ```
 
-A real Chrome opens at the target. Log in there, then type `y` + Enter. It
-re-drives the target (plus any `--routes`) with your session and prints findings.
+A real Chrome opens at the target. Log in there, then type `y` + Enter. How pages get covered:
 
-- `--routes` — SPA hash routes to also visit so their calls fire (comma-separated).
+- `--crawl` — auto-discover pages by following in-app `<a href>` links (BFS). Good for
+  link-based nav (many MPAs, some SPAs).
+- default / `--routes` — drives the target plus the given hash routes (comma-separated).
+  Good for hash-routed SPAs where you know the routes (Juice Shop).
+- `--max-pages` — cap for `--crawl` (default 40).
 - `--out` — findings JSON path (default `exposure-findings.json`).
 - `--settle` — ms to wait per page for XHRs (default 3000).
 - Env `EXPOSE_HEADLESS=1` — run headless (for targets that need no login).
+
+## Project structure
+
+```
+exposure-detect.py          main: field comparison, tiering, output, orchestration
+helpers/
+  instrument.py             browser-side usage instrumentation (shared)
+  login/session.py          start Chrome, wait for manual login
+  crawl/linkcrawl.py        drive fixed routes, or crawl in-app links
+```
 
 ## Output
 
@@ -58,7 +71,8 @@ that records which field names the app reads. `over-fetch = returned fields − 
 
 - Needs a **JSON API** (SPA or API-backed). A server-rendered MPA (e.g. DVWA) has
   no JSON to analyze, so it finds nothing by design.
-- **Coverage = pages driven.** Reach the data pages via `--routes`, or (planned) an
-  integrated crawler / record mode.
+- **Coverage = pages driven.** Use `--crawl` to auto-follow in-app links, or `--routes`
+  for known routes. `--crawl` follows `<a href>` links only, so pages reached by a
+  button/onclick router or a form submit are missed (record mode, planned, is the catch-all).
 - Tiers are **name heuristics** (`HIGH` / `LOW` lists at the top of the script);
   edit them to taste.
